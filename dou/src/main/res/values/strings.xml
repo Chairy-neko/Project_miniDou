@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">my_HW5</string>
+    <string name="request_data">request data</string>
+    <string name="requesting">requesting…</string>
+    <string name="select_an_image">select an image</string>
+    <string name="select_a_video">select a video</string>
+    <string name="post_it">post it!</string>
+    <string name="refresh_my">refresh my</string>
+    <string name="refresh_all">refresh all</string>
+    <string name="success_try_refresh">SUCCESS, try refresh!</string>
+</resources>
