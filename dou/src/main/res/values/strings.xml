@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">my_HW5</string>
+    <string name="app_name">mini抖音播放器</string>
     <string name="request_data">request data</string>
     <string name="requesting">requesting…</string>
     <string name="select_an_image">select an image</string>
@@ -8,4 +8,6 @@
     <string name="refresh_my">refresh my</string>
     <string name="refresh_all">refresh all</string>
     <string name="success_try_refresh">SUCCESS, try refresh!</string>
+    <string name="add_video">上传视频</string>
+    <string name="DIY">自制</string>
 </resources>

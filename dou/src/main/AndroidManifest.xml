@@ -23,5 +23,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".VideoActivity"/>
+        <activity
+            android:name=".AddActivity"
+            android:label="@string/add_video"/>
     </application>
 </manifest>

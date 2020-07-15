@@ -60,30 +60,31 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initBtns() {
-        mBtn = findViewById(R.id.btn);
+        mBtn = findViewById(R.id.btn_add);
         mBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String s = mBtn.getText().toString();
-                if (getString(R.string.select_an_image).equals(s)) {
-                    //@TODO 1填充选择图片的功能
-                    chooseImage();
-                } else if (getString(R.string.select_a_video).equals(s)) {
-                    //@TODO 2填充选择视频的功能
-                    chooseVideo();;
-                } else if (getString(R.string.post_it).equals(s)) {
-                    if (mSelectedVideo != null && mSelectedImage != null) {
-                        //@TODO 3调用上传功能
-                        postVideo();
-                    } else {
-                        throw new IllegalArgumentException("error data uri, mSelectedVideo = "
-                                + mSelectedVideo
-                                + ", mSelectedImage = "
-                                + mSelectedImage);
-                    }
-                } else if ((getString(R.string.success_try_refresh).equals(s))) {
-                    mBtn.setText(R.string.select_an_image);
-                }
+                startActivity(new Intent(MainActivity.this, AddActivity.class));
+//                String s = mBtn.getText().toString();
+////                if (getString(R.string.select_an_image).equals(s)) {
+////                    //@TODO 1填充选择图片的功能
+////                    chooseImage();
+////                } else if (getString(R.string.select_a_video).equals(s)) {
+////                    //@TODO 2填充选择视频的功能
+////                    chooseVideo();;
+////                } else if (getString(R.string.post_it).equals(s)) {
+////                    if (mSelectedVideo != null && mSelectedImage != null) {
+////                        //@TODO 3调用上传功能
+////                        postVideo();
+////                    } else {
+////                        throw new IllegalArgumentException("error data uri, mSelectedVideo = "
+////                                + mSelectedVideo
+////                                + ", mSelectedImage = "
+////                                + mSelectedImage);
+////                    }
+////                } else if ((getString(R.string.success_try_refresh).equals(s))) {
+////                    mBtn.setText(R.string.select_an_image);
+////                }
             }
         });
 
@@ -134,78 +135,78 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void chooseImage() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"),
-                PICK_IMAGE);
-    }
+//    public void chooseImage() {
+//        Intent intent = new Intent();
+//        intent.setType("image/*");
+//        intent.setAction(Intent.ACTION_GET_CONTENT);
+//        startActivityForResult(Intent.createChooser(intent, "Select Picture"),
+//                PICK_IMAGE);
+//    }
 
-    public void chooseVideo() {
-        Intent intent = new Intent();
-        intent.setType("video/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Video"), PICK_VIDEO);
-    }
+//    public void chooseVideo() {
+//        Intent intent = new Intent();
+//        intent.setType("video/*");
+//        intent.setAction(Intent.ACTION_GET_CONTENT);
+//        startActivityForResult(Intent.createChooser(intent, "Select Video"), PICK_VIDEO);
+//    }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        Log.d(TAG, "onActivityResult() called with: requestCode = ["
+//                + requestCode
+//                + "], resultCode = ["
+//                + resultCode
+//                + "], data = ["
+//                + data
+//                + "]");
+//
+//        if (resultCode == RESULT_OK && null != data) {
+//            if (requestCode == PICK_IMAGE) {
+//                mSelectedImage = data.getData();
+//                Log.d(TAG, "selectedImage = " + mSelectedImage);
+//                mBtn.setText(R.string.select_a_video);//修改
+//            } else if (requestCode == PICK_VIDEO) {
+//                mSelectedVideo = data.getData();
+//                Log.d(TAG, "mSelectedVideo = " + mSelectedVideo);
+//                mBtn.setText(R.string.post_it);//修改
+//            }
+//        }
+//    }
 
-        Log.d(TAG, "onActivityResult() called with: requestCode = ["
-                + requestCode
-                + "], resultCode = ["
-                + resultCode
-                + "], data = ["
-                + data
-                + "]");
+//    private MultipartBody.Part getMultipartFromUri(String name, Uri uri) {
+//        File f = new File(ResourceUtils.getRealPath(MainActivity.this, uri));
+//        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), f);
+//        return MultipartBody.Part.createFormData(name, f.getName(), requestFile);
+//    }
 
-        if (resultCode == RESULT_OK && null != data) {
-            if (requestCode == PICK_IMAGE) {
-                mSelectedImage = data.getData();
-                Log.d(TAG, "selectedImage = " + mSelectedImage);
-                mBtn.setText(R.string.select_a_video);//修改
-            } else if (requestCode == PICK_VIDEO) {
-                mSelectedVideo = data.getData();
-                Log.d(TAG, "mSelectedVideo = " + mSelectedVideo);
-                mBtn.setText(R.string.post_it);//修改
-            }
-        }
-    }
-
-    private MultipartBody.Part getMultipartFromUri(String name, Uri uri) {
-        File f = new File(ResourceUtils.getRealPath(MainActivity.this, uri));
-        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), f);
-        return MultipartBody.Part.createFormData(name, f.getName(), requestFile);
-    }
-
-    private void postVideo() {
-        mBtn.setText("POSTING...");
-        mBtn.setEnabled(false);
-        MultipartBody.Part coverImagePart = getMultipartFromUri("cover_image", mSelectedImage);
-        MultipartBody.Part videoPart = getMultipartFromUri("video", mSelectedVideo);
-        //@TODO 4下面的id和名字替换成自己的
-        miniDouyinService.postVideo("17396876307", "neko", coverImagePart, videoPart).enqueue(
-                new Callback<PostVideoResponse>() {
-                    @Override
-                    public void onResponse(Call<PostVideoResponse> call, Response<PostVideoResponse> response) {
-                        if (response.body() != null) {
-                            Toast.makeText(MainActivity.this, response.body().toString(), Toast.LENGTH_SHORT)
-                                    .show();
-                        }
-                        mBtn.setText(R.string.select_an_image);
-                        mBtn.setEnabled(true);
-                    }
-
-                    @Override
-                    public void onFailure(Call<PostVideoResponse> call, Throwable throwable) {
-                        mBtn.setText(R.string.select_an_image);
-                        mBtn.setEnabled(true);
-                        Toast.makeText(MainActivity.this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
+//    private void postVideo() {
+//        mBtn.setText("POSTING...");
+//        mBtn.setEnabled(false);
+//        MultipartBody.Part coverImagePart = getMultipartFromUri("cover_image", mSelectedImage);
+//        MultipartBody.Part videoPart = getMultipartFromUri("video", mSelectedVideo);
+//        //@TODO 4下面的id和名字替换成自己的
+//        miniDouyinService.postVideo("17396876307", "neko", coverImagePart, videoPart).enqueue(
+//                new Callback<PostVideoResponse>() {
+//                    @Override
+//                    public void onResponse(Call<PostVideoResponse> call, Response<PostVideoResponse> response) {
+//                        if (response.body() != null) {
+//                            Toast.makeText(MainActivity.this, response.body().toString(), Toast.LENGTH_SHORT)
+//                                    .show();
+//                        }
+//                        mBtn.setText(R.string.select_an_image);
+//                        mBtn.setEnabled(true);
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<PostVideoResponse> call, Throwable throwable) {
+//                        mBtn.setText(R.string.select_an_image);
+//                        mBtn.setEnabled(true);
+//                        Toast.makeText(MainActivity.this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//    }
 
     public void fetchFeed(View view) {
         final String s = mBtnRefresh.getText().toString();
